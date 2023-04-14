@@ -21,8 +21,13 @@ class Interface:
         self.music_bg.set_volume(0.1)
         self.music_bg.play(loops=-1)
 
-    def render_game_screen(self, bg_img, score, lives, level):
-        self.screen.blit(bg_img, (0, 0))
+    def render_game_screen(self, bg_imgs, score, lives, level):
+        
+        if level > 5:
+            self.screen.blit(bg_imgs[1], (0, 0))
+        else:
+            self.screen.blit(bg_imgs[0], (0, 0))
+
         lives_surface = self.font.render(f'Lives: {"<3 " * lives}', False, '#000000')
         lives_rect = lives_surface.get_rect(midleft=(20, 40))
         level_surface = self.font.render(f'Level: {level}', False, '#000000')

@@ -1,9 +1,12 @@
 import pygame
+from string import ascii_uppercase
 from sys import exit
+from random import choice
 
 from interface import Interface, Scoreboard
 from images import Image
 from database import Database
+from sprites import Letter
 db = Database()
 
 interface = Interface(800, 400)
@@ -25,8 +28,21 @@ class Game:
         self.start_time = 0
         self.clock = pygame.time.Clock()
         # Groups
-        #
-        # self.obstacles = pygame.sprite.Group()
+        
+        self.obstacles = pygame.sprite.Group()
+
+         # Timers
+        self.letter_timer = pygame.USEREVENT + 1
+
+    def timers_init(self):
+        pygame.time.set_timer(self.letter_timer, 1400)
+
+    def level_up(self):
+        Letter.increase_speed()
+        
+  #  def letter_collide(self):
+   #     pygame.sprite.spritecollide(self.obstacles, self.obstacles, True)
+
 
     def start_game(self):
         # Main loop
@@ -37,8 +53,12 @@ class Game:
                     pygame.quit()
                     exit(1)
                 if self.game_active:
-                    pass
+                    if event.type == self.letter_timer:
+                        letter = choice(list(ascii_uppercase))
+                        self.obstacles.add(Letter(letter))
+                        self.letter_collide()
                 else:
+                    # Scoreboard show event
                     if event.type == pygame.MOUSEBUTTONDOWN:
                         mouse_pos = pygame.mouse.get_pos()
                         if self.scoreboard_show:
@@ -47,13 +67,20 @@ class Game:
                                 interface.scoreboard_btn_pos[1] <= mouse_pos[1] <= interface.scoreboard_btn_pos[1] + interface.scoreboard_btn_width:
                             # Show scoreboard when button is clicked
                             self.scoreboard_show = True
+
+                    # event to start game
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_SPACE:
                             self.game_active = True
                             self.start_time = pygame.time.get_ticks()
 
             if self.game_active:
-                interface.render_game_screen(images.bg_image, self.score, self.lives, self.level)
+                interface.render_game_screen(images.bacgrounds, self.score, self.lives, self.level)
+
+                self.obstacles.update(self.level)
+                self.obstacles.draw(interface.screen)
+                
+                
 
             else:
                 if self.scoreboard_show:
@@ -64,4 +91,5 @@ class Game:
             self.clock.tick(60)
 
 game = Game('player')
+game.timers_init()
 game.start_game()
