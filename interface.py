@@ -66,10 +66,10 @@ class Interface:
         self.show_scoreboard_button()
 
         score_message = self.font.render(f"Your score: {score}!", False, 'Black')
-        score_message_rect = score_message.get_rect(center=(400, 330))
-        if score == 0:
-            self.screen.blit(instruction_text, instruction_text_rect)
-        else:
+        score_message_rect = score_message.get_rect(center=(400, 310))
+        
+        self.screen.blit(instruction_text, instruction_text_rect)
+        if score > 0:
             self.screen.blit(score_message, score_message_rect)
 
 

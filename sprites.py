@@ -23,7 +23,6 @@ class Letter(pygame.sprite.Sprite):
     @classmethod
     def increase_speed(cls):
         cls.speed += 1
-        print(cls.speed)
 
     def update(self, level):
         if level >= 5:

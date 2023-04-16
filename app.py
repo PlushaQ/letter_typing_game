@@ -17,7 +17,8 @@ images = Image()
 class Game:
     def __init__(self, player):
         images.convert_images()
-        # interface.music_init()
+        interface.music_init()
+        
         self.run = True
         self.name_screen = False
         self.game_active = False
@@ -55,6 +56,12 @@ class Game:
             if obstacle.destroy():
                 return lives - 1
         return lives
+    
+    def end_game(self):
+        self.game_active = False
+        db.add_record(self.score)
+        self.lives = 3
+        self.obstacles.empty()
 
     def start_game(self):
         # Main loop
@@ -96,9 +103,7 @@ class Game:
                 self.obstacles.update(self.level)
                 self.obstacles.draw(interface.screen)
                 if self.lives < 1:
-                    self.game_active = False
-                    db.add_record(self.score)
-                
+                    self.end_game()
             else:
                 if self.scoreboard_show:
                     scoreboard.show_scoreboard(db.get_top_five(), interface.screen, interface.font, interface.font_size)
