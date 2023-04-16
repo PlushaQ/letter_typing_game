@@ -16,7 +16,7 @@ images = Image()
 
 class Game:
     """Class managing core game logic"""
-    def __init__(self, player):
+    def __init__(self):
         images.convert_images()
         interface.music_init()
         
@@ -31,7 +31,7 @@ class Game:
         self.clock = pygame.time.Clock()
         # Groups
         
-        self.obstacles = pygame.sprite.Group()
+        self.letters = pygame.sprite.Group()
 
          # Timers
         self.letter_timer = pygame.USEREVENT + 1
@@ -49,16 +49,16 @@ class Game:
     def add_letter(self):
         # Function spawning new letters
         letter = choice(list(ascii_uppercase))
-        new_obstacle = Letter(letter)
-        self.obstacles.add(new_obstacle)
-        new_group = [o for o in self.obstacles if o != new_obstacle]
-        if pygame.sprite.spritecollide(new_obstacle, new_group, False):
-            new_obstacle.kill()
+        new_letter = Letter(letter)
+        self.letters.add(new_letter)
+        new_group = [l for l in self.letters if o != new_letter]
+        if pygame.sprite.spritecollide(new_letter, new_group, False):
+            new_letter.kill()
 
     def if_missed_letter(self, lives):
         # Function checking if letter is outside of game screen
-        for obstacle in self.obstacles:
-            if obstacle.destroy():
+        for letter in self.letters:
+            if letter.destroy():
                 return lives - 1
         return lives
     
@@ -67,7 +67,7 @@ class Game:
         self.game_active = False
         db.add_record(self.score)
         self.lives = 3
-        self.obstacles.empty()
+        self.letters.empty()
 
     def start_game(self):
         # Main loop
@@ -82,8 +82,8 @@ class Game:
                         self.add_letter()
                     # Checking if key clicked is a letter on screen
                     if event.type == pygame.KEYDOWN:
-                        for obstacle in self.obstacles:
-                            self.score = obstacle.hit(event.unicode, self.score)
+                        for letter in self.letters:
+                            self.score = letter.hit(event.unicode, self.score)
                 else:
                     # Scoreboard show event
                     if event.type == pygame.MOUSEBUTTONDOWN:
@@ -106,8 +106,8 @@ class Game:
                 
                 self.can_level_up()
                 self.lives = self.if_missed_letter(self.lives)
-                self.obstacles.update(self.level)
-                self.obstacles.draw(interface.screen)
+                self.letters.update(self.level)
+                self.letters.draw(interface.screen)
                 if self.lives < 1:
                     self.end_game()
             else:
@@ -117,7 +117,9 @@ class Game:
                     interface.show_intro_and_end_screen(self.score, images.intro_bg)
             pygame.display.update()
             self.clock.tick(60)
+
+
 if __name__ == "__main__":
-    game = Game('player')
+    game = Game()
     game.timers_init()
     game.start_game()
