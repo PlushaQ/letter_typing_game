@@ -51,7 +51,7 @@ class Game:
         letter = choice(list(ascii_uppercase))
         new_letter = Letter(letter)
         self.letters.add(new_letter)
-        new_group = [l for l in self.letters if o != new_letter]
+        new_group = [l for l in self.letters if l != new_letter]
         if pygame.sprite.spritecollide(new_letter, new_group, False):
             new_letter.kill()
 
