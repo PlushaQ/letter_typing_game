@@ -3,6 +3,7 @@ from os import listdir
 
 
 class Image:
+    """ Class to manage images"""
     def __init__(self):
         self.bg1_image = pygame.image.load('graphics/background/background1.jpg')
         self.bg2_image = pygame.image.load('graphics/background/background2.jpg')

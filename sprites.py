@@ -2,6 +2,7 @@ import pygame
 from random import randint
 
 class Letter(pygame.sprite.Sprite):
+    """ Class managing letters sprites and it's depencencies"""
     speed = 1
     def __init__(self, name):
         super().__init__()

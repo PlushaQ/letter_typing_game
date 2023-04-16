@@ -2,6 +2,7 @@ import pygame
 
 
 class Interface:
+    """ Main class showing interface """
     def __init__(self, width, height):
         pygame.init()
         self.width = width
@@ -17,12 +18,13 @@ class Interface:
         self.scoreboard_btn_height = 80
 
     def music_init(self):
+        # Music initializations
         self.music_bg = pygame.mixer.Sound('audio/music.wav')
         self.music_bg.set_volume(0.1)
         self.music_bg.play(loops=-1)
 
     def render_game_screen(self, bg_imgs, score, lives, level):
-        
+        # Function rendering game screen depending on level
         if level > 5:
             self.screen.blit(bg_imgs[1], (0, 0))
         else:
@@ -40,6 +42,7 @@ class Interface:
         return score
 
     def show_scoreboard_button(self):
+        # Function showing scoreboard button 
         pygame.draw.rect(
             self.screen,
             (0, 122, 122),
@@ -77,6 +80,7 @@ interface = Interface(800,400)
 
 
 class Scoreboard:
+    """Class managing scoreboard"""
     def __init__(self):
         self.scoreboard_pos = (400, 200)
         self.scoreboard_width = 300

@@ -15,6 +15,7 @@ images = Image()
 
 
 class Game:
+    """Class managing core game logic"""
     def __init__(self, player):
         images.convert_images()
         interface.music_init()
@@ -36,14 +37,17 @@ class Game:
         self.letter_timer = pygame.USEREVENT + 1
 
     def timers_init(self):
+        # Function initializing custom event
         pygame.time.set_timer(self.letter_timer, 1400)
 
     def can_level_up(self):
+        # Function checking if score is high enough to level up
         if self.score >= 100 * self.level:
             Letter.increase_speed()
             self.level += 1
         
     def add_letter(self):
+        # Function spawning new letters
         letter = choice(list(ascii_uppercase))
         new_obstacle = Letter(letter)
         self.obstacles.add(new_obstacle)
@@ -52,12 +56,14 @@ class Game:
             new_obstacle.kill()
 
     def if_missed_letter(self, lives):
+        # Function checking if letter is outside of game screen
         for obstacle in self.obstacles:
             if obstacle.destroy():
                 return lives - 1
         return lives
     
     def end_game(self):
+        # Function showing end screen, updating database and restarting variables to "start position"
         self.game_active = False
         db.add_record(self.score)
         self.lives = 3
@@ -74,7 +80,7 @@ class Game:
                 if self.game_active:
                     if event.type == self.letter_timer:
                         self.add_letter()
-
+                    # Checking if key clicked is a letter on screen
                     if event.type == pygame.KEYDOWN:
                         for obstacle in self.obstacles:
                             self.score = obstacle.hit(event.unicode, self.score)
@@ -94,7 +100,7 @@ class Game:
                         if event.key == pygame.K_SPACE:
                             self.game_active = True
                             self.start_time = pygame.time.get_ticks()
-
+            # Game core 
             if self.game_active:
                 interface.render_game_screen(images.bacgrounds, self.score, self.lives, self.level)
                 
@@ -111,7 +117,7 @@ class Game:
                     interface.show_intro_and_end_screen(self.score, images.intro_bg)
             pygame.display.update()
             self.clock.tick(60)
-
-game = Game('player')
-game.timers_init()
-game.start_game()
+if __name__ == "__main__":
+    game = Game('player')
+    game.timers_init()
+    game.start_game()
