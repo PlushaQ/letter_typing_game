@@ -50,19 +50,18 @@ class Interface:
         label_pos = 710, 60
         self.screen.blit(label, label_pos)
 
-    def show_intro_and_end_screen(self, score):
+    def show_intro_and_end_screen(self, score, intro_bg):
         # Function about rendering intro or end screen depending on state of game
-        self.screen.fill('#5e81a2')
         welcome_text = self.font.render("Letter Shooting Game", False, 'Black')
         welcome_text_rect = welcome_text.get_rect(center=(400, 50))
 
-        # player_stand = player_image
-        # player_stand_rect = player_stand.get_rect(center=(400, 200))
+        
+        intro_bg_rect = intro_bg.get_rect(topleft=(0, 0))
 
         instruction_text = self.font.render("Press SPACE to play!", False, 'Black')
         instruction_text_rect = instruction_text.get_rect(center=(400, 350))
 
-        # self.screen.blit(player_stand, player_stand_rect)
+        self.screen.blit(intro_bg, intro_bg_rect)
         self.screen.blit(welcome_text, welcome_text_rect)
         self.show_scoreboard_button()
 

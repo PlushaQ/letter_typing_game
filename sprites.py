@@ -30,10 +30,21 @@ class Letter(pygame.sprite.Sprite):
             self.shake()
         else:
             self.movement()
-        self.rect.y += 0
-        self.destroy()
+        
+    def hit(self, key, score):
+        if key.lower() == self.name.lower():
+            self.kill()
+            return score + 10
+        return score
+           
 
     def destroy(self):
         # Function to destroy sprite when it's not in the screen anymore
-        if self.rect.y > 400:
+        if self.rect.y > 400 or self.rect.x < 0 or self.rect.x > 800:
             self.kill()
+            return True
+
+
+            
+
+        

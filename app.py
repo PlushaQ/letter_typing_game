@@ -16,7 +16,7 @@ images = Image()
 
 class Game:
     def __init__(self, player):
-        # images.convert_images()
+        images.convert_images()
         # interface.music_init()
         self.run = True
         self.name_screen = False
@@ -37,12 +37,24 @@ class Game:
     def timers_init(self):
         pygame.time.set_timer(self.letter_timer, 1400)
 
-    def level_up(self):
-        Letter.increase_speed()
+    def can_level_up(self):
+        if self.score >= 100 * self.level:
+            Letter.increase_speed()
+            self.level += 1
         
-  #  def letter_collide(self):
-   #     pygame.sprite.spritecollide(self.obstacles, self.obstacles, True)
+    def add_letter(self):
+        letter = choice(list(ascii_uppercase))
+        new_obstacle = Letter(letter)
+        self.obstacles.add(new_obstacle)
+        new_group = [o for o in self.obstacles if o != new_obstacle]
+        if pygame.sprite.spritecollide(new_obstacle, new_group, False):
+            new_obstacle.kill()
 
+    def if_missed_letter(self, lives):
+        for obstacle in self.obstacles:
+            if obstacle.destroy():
+                return lives - 1
+        return lives
 
     def start_game(self):
         # Main loop
@@ -54,9 +66,11 @@ class Game:
                     exit(1)
                 if self.game_active:
                     if event.type == self.letter_timer:
-                        letter = choice(list(ascii_uppercase))
-                        self.obstacles.add(Letter(letter))
-                        self.letter_collide()
+                        self.add_letter()
+
+                    if event.type == pygame.KEYDOWN:
+                        for obstacle in self.obstacles:
+                            self.score = obstacle.hit(event.unicode, self.score)
                 else:
                     # Scoreboard show event
                     if event.type == pygame.MOUSEBUTTONDOWN:
@@ -76,17 +90,20 @@ class Game:
 
             if self.game_active:
                 interface.render_game_screen(images.bacgrounds, self.score, self.lives, self.level)
-
+                
+                self.can_level_up()
+                self.lives = self.if_missed_letter(self.lives)
                 self.obstacles.update(self.level)
                 self.obstacles.draw(interface.screen)
+                if self.lives < 1:
+                    self.game_active = False
+                    db.add_record(self.score)
                 
-                
-
             else:
                 if self.scoreboard_show:
                     scoreboard.show_scoreboard(db.get_top_five(), interface.screen, interface.font, interface.font_size)
                 else:
-                    interface.show_intro_and_end_screen(self.score)
+                    interface.show_intro_and_end_screen(self.score, images.intro_bg)
             pygame.display.update()
             self.clock.tick(60)
 
