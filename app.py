@@ -42,7 +42,7 @@ class Game:
 
     def can_level_up(self):
         # Function checking if score is high enough to level up
-        if self.score >= 100 * self.level:
+        if self.score >= 30 * self.level:
             Letter.increase_speed()
             self.level += 1
         
@@ -61,6 +61,13 @@ class Game:
             if letter.destroy():
                 return lives - 1
         return lives
+    
+    def new_game(self):
+        self.game_active = True
+        self.score = 0
+        self.level = 1
+        Letter.reset_speed()
+
     
     def end_game(self):
         # Function showing end screen, updating database and restarting variables to "start position"
@@ -98,8 +105,8 @@ class Game:
                     # event to start game
                     if event.type == pygame.KEYDOWN:
                         if event.key == pygame.K_SPACE:
-                            self.game_active = True
-                            self.start_time = pygame.time.get_ticks()
+                            self.new_game()
+                            
             # Game core 
             if self.game_active:
                 interface.render_game_screen(images.bacgrounds, self.score, self.lives, self.level)

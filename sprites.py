@@ -25,6 +25,10 @@ class Letter(pygame.sprite.Sprite):
     def increase_speed(cls):
         cls.speed += 1
 
+    @classmethod
+    def reset_speed(cls):
+        cls.speed = 1
+
     def update(self, level):
         if level >= 5:
             self.shake()
